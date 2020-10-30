@@ -30,7 +30,7 @@ In your `/etc/nixos/configuration.nix`:
     ];
   };
 
-  # 4. Make sure that dependencies of installed fish plugins are satisfised.
+  # 4. Make sure that the dependencies of the installed fish plugins are satisfised.
   environment.systemPackages = with pkgs; [
     fzf # Required by jethrokuan/fzf.
     fzy # Required by b4b4r07/enhancd.
