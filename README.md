@@ -20,7 +20,7 @@ In your `/etc/nixos/configuration.nix`:
 
 
   programs.fish = {
-    # 2. Enable fish-shell.
+    # 2. Enable fish-shell if you don't.
     enable = true;
 
     # 3. Declare fish plugins to be installed.
