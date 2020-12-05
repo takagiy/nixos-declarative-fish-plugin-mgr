@@ -39,6 +39,7 @@ in
   config = mkIf cfg.enable {
     programs.fish.interactiveShellInit = optionalString (fishPath != null) ''
       set -g nixos_fish_plugins ${fishPath}
+      set -g fisher_path ${fishPath}
       set -p fish_function_path fish_function_path[1] ''$nixos_fish_plugins/functions
       set -p fish_complete_path fish_complete_path[1] ''$nixos_fish_plugins/completions
 
