@@ -28,8 +28,13 @@ let
   '';
 
   installScript = fishPath: ''
-    for file in ${fishPath}/conf.d/*.fish
-      emit (basename ''$file .fish)_install
+    if [ -z $nixos_fish_plugins_installed ]
+      for file in ${fishPath}/conf.d/*.fish
+        emit (basename ''$file .fish)_install
+        echo emit (basename ''$file .fish)_install
+      end
+      set -Ux nixos_fish_plugins_installed yes
+      ${initScript fishPath}
     end
   '';
 
@@ -40,12 +45,6 @@ let
       paths = map (drv: drv.path) pluginDrvs;
       pathsToLink = [ "/conf.d" "/functions" "/completions" ];
       buildInputs = [ pkgs.fish ];
-      postBuild = ''
-        HOME=(mktemp -d) fish -c '
-	  ${initScript "$out"}
-	  ${installScript "$out"}
-	'
-      '';
     };
 in
 
@@ -65,6 +64,8 @@ in
   };
 
   config = mkIf cfg.enable {
-    programs.fish.interactiveShellInit = optionalString (fishPath != null) (initScript fishPath);
+    programs.fish.interactiveShellInit =
+      optionalString (fishPath != null) (initScript fishPath + installScript fishPath);
+      environment.variables."nixos_fish_plugins_installed"="";
   };
 }
