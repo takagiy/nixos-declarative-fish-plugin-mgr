@@ -80,6 +80,6 @@ in
   #  '';
   #};
   config = mkIf cfg.enable {
-    programs.fish.interactiveShellInit = optionalString (fishPath != null) (initScript fishPath)
+    programs.fish.interactiveShellInit = optionalString (fishPath != null) (initScript fishPath);
   };
 }
