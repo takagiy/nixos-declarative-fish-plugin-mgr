@@ -35,14 +35,14 @@ let
 
   fishPath =
     if length cfg.plugins == 0 then null
-    else pkgs.buildEnv {
+    else pkgs.buildEnv rec {
       name = "fish-plugins";
       paths = map (drv: drv.path) pluginDrvs;
       pathsToLink = [ "/conf.d" "/functions" "/completions" ];
       postBuild = ''
         fish -c '
-	  ${initScript out}
-	  ${installScript out}
+	  ${initScript fishPath}
+	  ${installScript fishPath}
 	'
       '';
     };
