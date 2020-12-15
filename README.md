@@ -13,7 +13,7 @@ In your `/etc/nixos/configuration.nix`:
     [
       # 1. Add archive of this repository to your imports.
       (fetchTarball
-        "https://github.com/takagiy/nixos-declarative-fish-plugin-mgr/archive/0.0.1.tar.gz")
+        "https://github.com/takagiy/nixos-declarative-fish-plugin-mgr/archive/0.0.4.tar.gz")
 
       #...  
     ];
