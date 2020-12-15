@@ -20,18 +20,34 @@ let
 
     ${concatMapStringsSep "\n" (drv: ''
       path=${drv.path} package=${drv.name} builtin source ${drv.path}/init.fish 2> /dev/null
+      echo DO!! path=${drv.path} package=${drv.name} builtin source ${drv.path}/init.fish 2> /dev/null
     '') pluginDrvs}
 
     for file in ''$nixos_fish_plugins/conf.d/*.fish
         builtin source ''$file 2> /dev/null
+        echo DO!! builtin source ''$file 2> /dev/null
     end
   '';
 
   installScript = fishPath: ''
     for file in ${fishPath}/conf.d/*.fish
       emit (basename ''$file .fish)_install
+      echo DO!! emit (basename ''$file .fish)_install
     end
   '';
+
+  homes =
+    let users = filter (u: u.createHome) (attrValues config.users.users);
+    in map (u: u.home) users;
+
+  installForAllUsers = homes: concatMapStringsSep "\n" (h: ''
+    echo HOME!! ${h}
+    ls ${h}
+    HOME=${h} fish -c '
+      ${initScript "$out"}
+      ${installScript "$out"}
+    '
+  '') homes;
 
   fishPath =
     if length cfg.plugins == 0 then null
@@ -40,12 +56,7 @@ let
       paths = map (drv: drv.path) pluginDrvs;
       pathsToLink = [ "/conf.d" "/functions" "/completions" ];
       buildInputs = [ pkgs.fish ];
-      postBuild = ''
-        HOME=(mktemp -d) fish -c '
-	  ${initScript "$out"}
-	  ${installScript "$out"}
-	'
-      '';
+      postBuild = installForAllUsers homes;
     };
 in
 
