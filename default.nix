@@ -41,8 +41,8 @@ let
       pathsToLink = [ "/conf.d" "/functions" "/completions" ];
       postBuild = ''
         fish -c '
-	  ${initScript fishPath}
-	  ${installScript fishPath}
+	  ${initScript "$out"}
+	  ${installScript "$out"}
 	'
       '';
     };
